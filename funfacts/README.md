@@ -19,55 +19,50 @@ If you are developing a production application, we recommend updating the config
 export default defineConfig([
   globalIgnores(['dist']),
   {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+    # funfacts — React + TypeScript + Vite
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+    Small demo app showing a Vite + React + TypeScript setup with ESLint configured. Use this README for local development and quick reference.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+    Project structure
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+    - `src/` — application source
+    - `public/` — static assets
+    - `index.html`, `vite.config.ts`, `package.json` — Vite app files
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+    Quick start (local)
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+    Prerequisites: Node.js 18+, npm or yarn
+
+    Install dependencies and run dev server:
+
+    ```bash
+    cd funfacts
+    npm install
+    npm run dev
+    ```
+
+    Build for production:
+
+    ```bash
+    cd funfacts
+    npm run build
+    ```
+
+    Linting
+
+    ```bash
+    cd funfacts
+    npm run lint
+    ```
+
+    Notes
+
+    - This project includes ESLint configuration examples in `eslint.config.js`.
+    - To enable type-aware ESLint rules, ensure `tsconfig.app.json` and `tsconfig.node.json` are present and referenced by ESLint.
+
+    Customization
+
+    - Swap React compiler or change plugins in `vite.config.ts`.
+    - Update styles in `src/App.css` or add components to `src/`.
+
+    If you'd like, I can add CONTRIBUTING.md, ISSUE templates, or a short demo script next.

@@ -1,34 +1,91 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useEffect, useState } from 'react'
 import './App.css'
 
+type Fact = {
+  id: string
+  text: string
+  source: string
+  source_url: string
+  language: string
+  permalink: string
+}
+
+const RANDOM_FACT_URL = 'https://uselessfacts.jsph.pl/api/v2/facts/random?language=en'
+
 function App() {
-  const [count, setCount] = useState(0)
+  const [fact, setFact] = useState<Fact | null>(null)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  const fetchFact = () => {
+    setLoading(true)
+    setError(null)
+    fetch(RANDOM_FACT_URL)
+      .then((res) => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`)
+        return res.json()
+      })
+      .then((data: Fact) => setFact(data))
+      .catch((e) => setError('Failed to load fact. Try again!'))
+      .finally(() => setLoading(false))
+  }
+
+  useEffect(() => {
+    fetchFact()
+  }, [])
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+    <div className="App">
+      <header className="header">
+        <h1>💡 Useless Facts</h1>
+        <p>Discover random fascinating (and useless!) facts</p>
+      </header>
+
+      <main className="main-content">
+        {loading && (
+          <div className="loading">
+            <div className="spinner"></div>
+            <p>Loading a fact...</p>
+          </div>
+        )}
+
+        {error && <div className="error-box">{error}</div>}
+
+        {fact && (
+          <div className="fact-card">
+            <div className="fact-text">{fact.text}</div>
+            <div className="fact-meta">
+              <p>
+                <strong>Source:</strong>{' '}
+                <a href={fact.source_url} target="_blank" rel="noreferrer">
+                  {fact.source}
+                </a>
+              </p>
+              <p>
+                <small>
+                  <a href={fact.permalink} target="_blank" rel="noreferrer" className="permalink">
+                    View on uselessfacts.jsph.pl →
+                  </a>
+                </small>
+              </p>
+            </div>
+          </div>
+        )}
+
+        <button
+          className="refresh-btn"
+          onClick={fetchFact}
+          disabled={loading}
+          aria-label="Get another fact"
+        >
+          {loading ? 'Loading...' : 'Get Another Fact'}
         </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+      </main>
+
+      <footer className="footer">
+        <p>Data from uselessfacts.jsph.pl API</p>
+      </footer>
+    </div>
   )
 }
 
